@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace AnyToUDP
 {
@@ -13,6 +14,15 @@ namespace AnyToUDP
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Protocol2UDP p2u = Protocol2UDP.getProtocol2UDP(new SerialPort2UDP("com10", 9600), "192.168.1.104", 4001);
+            if (p2u != null)
+            {
+                p2u.startRun();
+            }
         }
     }
 }
