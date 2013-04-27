@@ -68,7 +68,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="IProtocol.cs" />
+    <Compile Include="any2UDP\IProtocol.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -94,8 +94,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Protocol2UDP.cs" />
-    <Compile Include="SerialPort2UDP.cs" />
+    <Compile Include="any2UDP\Protocol2UDP.cs" />
+    <Compile Include="any2UDP\SerialPort2UDP.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
