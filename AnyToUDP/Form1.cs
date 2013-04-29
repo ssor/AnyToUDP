@@ -18,7 +18,7 @@ namespace AnyToUDP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Protocol2UDP p2u = Protocol2UDP.getProtocol2UDP(new SerialPort2UDP("com4", 19200), "192.168.1.100", 5000);
+            Protocol2UDP p2u = Protocol2UDP.getProtocol2UDP(new SerialPort2UDP("com9", 19200), "192.168.1.100", 5000,15000);
             if (p2u != null)
             {
                 p2u.startRun();

@@ -18,6 +18,10 @@ namespace AnyToUDP
             this.PortName = portName;
             this.BaudRate = baudRate;
         }
+        public void accept_msg(string data)
+        {
+            comport.Write(data);
+        }
         public void register_event(OnReceiveData receiveData)
         {
             evtReceiveData += receiveData;
