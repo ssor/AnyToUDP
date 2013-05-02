@@ -9,5 +9,6 @@ namespace AnyToUDP
     {
         void register_event(OnReceiveData receiveData);
         bool prepare();
+        void accept_msg(string data);
     }
 }
