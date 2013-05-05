@@ -9,10 +9,15 @@ using System.Windows.Forms;
 
 namespace AnyToUDP
 {
+    public interface ILog
+    {
+        void addLog(string data);
+    }
     public class Protocol2UDP
     {
         public IPAddress remoteIPaddress;
         public int remoteUdpPort;
+        public ILog logForm = null;
 
         Socket serverSocket = null; //The main server socket
         Socket clientSocket = null; //The main client socket
@@ -118,6 +123,14 @@ namespace AnyToUDP
                 MessageBox.Show(e.Message);
             }
         }
+        void outputLog(string log)
+        {
+            if (this.logForm != null)
+            {
+                logForm.addLog(log);
+            }
+        }
+        // UDP => IFrom(eg. SerialPort)
         private void OnReceive(IAsyncResult ar)
         {
 
@@ -136,6 +149,7 @@ namespace AnyToUDP
                 {
                     string data = strReceived.Substring(0, i);
                     Debug.WriteLine(" Data => SP: " + data);
+                    outputLog("UDP =>" + data);
                     //todo here should deal with the received string
                     this.ProtocolFrom.accept_msg(data);
                 }
@@ -151,6 +165,8 @@ namespace AnyToUDP
                     , ex.Message));
             }
         }
+
+        //IFrom(eg. SerialPort)  => UDP
         void OnDataReceived(string data)
         {
             try
@@ -158,6 +174,7 @@ namespace AnyToUDP
                 Debug.WriteLine("OnDataReceived => " + data);
 
                 byte[] byteData = Encoding.UTF8.GetBytes(data);
+                outputLog("UDP <=" + data);
 
                 clientSocket.BeginSendTo(byteData, 0,
                                 byteData.Length, SocketFlags.None,
