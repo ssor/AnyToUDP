@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO.Ports;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace AnyToUDP
 {
@@ -20,7 +21,20 @@ namespace AnyToUDP
         }
         public void accept_msg(string data)
         {
-            comport.Write(data);
+            //处理成16进制
+            MatchCollection mc = Regex.Matches(data, @"(?i)[\da-f]{2}");
+            List<byte> buf = new List<byte>();//填充到这个临时列表中
+
+            //依次添加到列表中
+            foreach (Match m in mc)
+            {
+                //   Byte.Parse(m.ToString(), System.Globalization.NumberStyles.HexNumber);
+                buf.Add(Byte.Parse(m.ToString(), System.Globalization.NumberStyles.HexNumber));
+            }
+            //  ;
+            //转换列表为数组后发送
+            if (comport.IsOpen)
+                comport.Write(buf.ToArray(), 0, buf.Count);
         }
         public void register_event(OnReceiveData receiveData)
         {
@@ -46,11 +60,15 @@ namespace AnyToUDP
         {
             try
             {
-                string temp = comport.ReadExisting();
-                Debug.WriteLine("port_DataReceived => " + temp);
+                int n = comport.BytesToRead;//n为返回的字节数
+                byte[] buf = new byte[n];//初始化buf 长度为n
+                comport.Read(buf, 0, n);//读取返回数据并赋值到数组
+
+                //string temp = comport.ReadExisting();
+                //Debug.WriteLine("port_DataReceived => " + temp);
                 if (this.evtReceiveData != null)
                 {
-                    evtReceiveData(temp);
+                    evtReceiveData(buf);
                 }
             }
             catch (System.Exception ex)

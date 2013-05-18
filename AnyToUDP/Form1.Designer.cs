@@ -43,6 +43,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtLog = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -185,11 +186,22 @@
             this.txtLog.Size = new System.Drawing.Size(706, 286);
             this.txtLog.TabIndex = 13;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(643, 187);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 14;
+            this.button2.Text = "清空";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(855, 512);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.groupBox2);
@@ -223,6 +235,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtLog;
+        private System.Windows.Forms.Button button2;
     }
 }
 

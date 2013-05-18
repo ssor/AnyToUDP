@@ -153,6 +153,8 @@ namespace AnyToUDP
                     //todo here should deal with the received string
                     this.ProtocolFrom.accept_msg(data);
                 }
+
+
                 //Start listening to the message send by the user
                 serverSocket.BeginReceiveFrom(byteData, 0, byteData.Length, SocketFlags.None, ref epSender,
                     new AsyncCallback(OnReceive), epSender);
@@ -167,17 +169,32 @@ namespace AnyToUDP
         }
 
         //IFrom(eg. SerialPort)  => UDP
-        void OnDataReceived(string data)
+        void OnDataReceived(byte[] data)
         {
             try
             {
-                Debug.WriteLine("OnDataReceived => " + data);
+                //Debug.WriteLine("OnDataReceived => " + data);
 
-                byte[] byteData = Encoding.UTF8.GetBytes(data);
-                outputLog("UDP <=" + data);
+                //byte[] byteData = Encoding.UTF8.GetBytes(data);
+                StringBuilder builder = new StringBuilder();
+                if (true)//16进制
+                {
+                    //依次的拼接出16进制字符串
+                    foreach (byte b in data)
+                    {
+                        builder.Append(b.ToString("X2") + " ");
+                    }
 
-                clientSocket.BeginSendTo(byteData, 0,
-                                byteData.Length, SocketFlags.None,
+                }
+                else
+                {
+                    //直接按ASCII规则转换成字符串
+                    builder.Append(Encoding.ASCII.GetString(data));
+                }
+                outputLog("UDP <=" + builder.ToString());
+
+                clientSocket.BeginSendTo(data, 0,
+                                data.Length, SocketFlags.None,
                                 epServer, new AsyncCallback(OnSend), null);
             }
             catch (System.Exception ex)

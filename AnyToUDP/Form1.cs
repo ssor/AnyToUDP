@@ -30,9 +30,8 @@ namespace AnyToUDP
             this.cmbBaut.Items.AddRange(new object[] { "9600", "19200", "115200" });
             this.cmbBaut.SelectedIndex = 1;
             this.txtRemoteIP.Text = Protocol2UDP.GetLocalIP4();
-            this.txtRemotePort.Text = "5000";
-            this.txtLocalPort.Text = "15000";
-
+            this.txtRemotePort.Text = "19201";
+            this.txtLocalPort.Text = "19200";
 
         }
 
@@ -65,6 +64,7 @@ namespace AnyToUDP
             Protocol2UDP p2u = Protocol2UDP.getProtocol2UDP(new SerialPort2UDP(serialPortName, int.Parse(baut)), remoteIP, int.Parse(remotePort), int.Parse(localPort));
             if (p2u != null)
             {
+                p2u.logForm = this;
                 p2u.startRun();
             }
 
@@ -80,6 +80,11 @@ namespace AnyToUDP
                 this.txtLog.Text = log + "\r\n" + this.txtLog.Text;
             };
             this.Invoke(func, data);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.txtLog.Text = string.Empty;
         }
     }
 }
