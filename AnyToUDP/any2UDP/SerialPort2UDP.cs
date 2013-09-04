@@ -13,30 +13,43 @@ namespace AnyToUDP
         SerialPort comport = null;
         string PortName;
         int BaudRate;
+        bool bHexStyle = false;
 
         public SerialPort2UDP(string portName, int baudRate)
         {
             this.PortName = portName;
             this.BaudRate = baudRate;
         }
-        public void accept_msg(string data)
+        public void write_data_to_serial_port(byte[] data)
         {
-            //处理成16进制
-            MatchCollection mc = Regex.Matches(data, @"(?i)[\da-f]{2}");
-            List<byte> buf = new List<byte>();//填充到这个临时列表中
-
-            //依次添加到列表中
-            foreach (Match m in mc)
-            {
-                //   Byte.Parse(m.ToString(), System.Globalization.NumberStyles.HexNumber);
-                buf.Add(Byte.Parse(m.ToString(), System.Globalization.NumberStyles.HexNumber));
-            }
-            //  ;
-            //转换列表为数组后发送
             if (comport.IsOpen)
-                comport.Write(buf.ToArray(), 0, buf.Count);
+                comport.Write(data, 0, data.Length);
+            //if (bHexStyle)
+            //{
+            //    //处理成16进制
+            //    MatchCollection mc = Regex.Matches(data, @"(?i)[\da-f]{2}");
+            //    List<byte> buf = new List<byte>();//填充到这个临时列表中
+
+            //    //依次添加到列表中
+            //    foreach (Match m in mc)
+            //    {
+            //        //   Byte.Parse(m.ToString(), System.Globalization.NumberStyles.HexNumber);
+            //        buf.Add(Byte.Parse(m.ToString(), System.Globalization.NumberStyles.HexNumber));
+            //    }
+            //    //转换列表为数组后发送
+            //    if (comport.IsOpen)
+            //        comport.Write(buf.ToArray(), 0, buf.Count);
+            //}
+            //else
+            //{
+            //    byte[] bytes = ASCIIEncoding.UTF8.GetBytes(data);
+            //    //转换列表为数组后发送
+            //    if (comport.IsOpen)
+            //        comport.Write(bytes, 0, bytes.Length);
+            //}
+
         }
-        public void register_event(OnReceiveData receiveData)
+        public void register_receive_data_event(OnReceiveData receiveData)
         {
             evtReceiveData += receiveData;
         }

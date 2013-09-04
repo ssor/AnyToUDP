@@ -61,6 +61,7 @@ namespace AnyToUDP
             if (remotePort.Length <= 0 || !Regex.IsMatch(remotePort, patternInt)) return;
 
 
+            //Protocol2UDP p2u = Protocol2UDP.getProtocol2UDP(new SerialPort2UDP(serialPortName, 9600), remoteIP, int.Parse(remotePort), int.Parse(localPort));
             Protocol2UDP p2u = Protocol2UDP.getProtocol2UDP(new SerialPort2UDP(serialPortName, int.Parse(baut)), remoteIP, int.Parse(remotePort), int.Parse(localPort));
             if (p2u != null)
             {

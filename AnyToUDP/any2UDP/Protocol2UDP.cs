@@ -27,6 +27,7 @@ namespace AnyToUDP
         IProtocol ProtocolFrom;
         EndPoint epServer = null;
         byte[] byteData = new byte[1024];
+        bool bHexStyle = false;
 
         public static Protocol2UDP getProtocol2UDP(IProtocol iFrom, string remoteIP, int remoteUdpPort, int localUdpPort)
         {
@@ -83,7 +84,7 @@ namespace AnyToUDP
                     IPEndPoint ipEndPoint = new IPEndPoint(this.remoteIPaddress, this.remoteUdpPort);
                     epServer = (EndPoint)ipEndPoint;
                 }
-                ProtocolFrom.register_event(OnDataReceived);
+                ProtocolFrom.register_receive_data_event(OnDataReceived);
             }
             catch (System.Exception ex)
             {
@@ -115,6 +116,7 @@ namespace AnyToUDP
                 EndPoint epSender = (EndPoint)ipeSender;
 
                 //Start receiving data
+                //Array.Clear(byteData, 0, byteData.Length);
                 serverSocket.BeginReceiveFrom(byteData, 0, byteData.Length,
                     SocketFlags.None, ref epSender, new AsyncCallback(OnReceive), epSender);
             }
@@ -141,18 +143,28 @@ namespace AnyToUDP
 
                 serverSocket.EndReceiveFrom(ar, ref epSender);
 
-                string strReceived = Encoding.UTF8.GetString(byteData);
+                //string strReceived = Encoding.UTF8.GetString(byteData);
 
+                //int i = strReceived.IndexOf("\0");
+                int i = Array.IndexOf<byte>(byteData, 0);
+                byte[] newData = new byte[i];
+                //byteData.CopyTo(newData, 0);
+                Array.Copy(byteData, 0, newData, 0, i);
+                this.ProtocolFrom.write_data_to_serial_port(newData);
                 Array.Clear(byteData, 0, byteData.Length);
-                int i = strReceived.IndexOf("\0");
-                if (i > 0)
-                {
-                    string data = strReceived.Substring(0, i);
-                    Debug.WriteLine(" Data => SP: " + data);
-                    outputLog("UDP =>" + data);
-                    //todo here should deal with the received string
-                    this.ProtocolFrom.accept_msg(data);
-                }
+
+                //string strReceived = Encoding.UTF8.GetString(byteData);
+
+                //Array.Clear(byteData, 0, byteData.Length);
+                //int i = strReceived.IndexOf("\0");
+                //if (i > 0)
+                //{
+                //    string data = strReceived.Substring(0, i);
+                //    Debug.WriteLine(" Data => SP: " + data);
+                //    outputLog("UDP =>" + data);
+                //    //todo here should deal with the received string
+                //    this.ProtocolFrom.write_data_to_serial_port(data);
+                //}
 
 
                 //Start listening to the message send by the user
@@ -177,7 +189,7 @@ namespace AnyToUDP
 
                 //byte[] byteData = Encoding.UTF8.GetBytes(data);
                 StringBuilder builder = new StringBuilder();
-                if (true)//16进制
+                if (bHexStyle)//16进制
                 {
                     //依次的拼接出16进制字符串
                     foreach (byte b in data)
@@ -189,7 +201,7 @@ namespace AnyToUDP
                 else
                 {
                     //直接按ASCII规则转换成字符串
-                    builder.Append(Encoding.ASCII.GetString(data));
+                    builder.Append(Encoding.UTF8.GetString(data));
                 }
                 outputLog("UDP <=" + builder.ToString());
 

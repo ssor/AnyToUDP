@@ -7,8 +7,8 @@ namespace AnyToUDP
     public delegate void OnReceiveData(byte[] data);
     public interface IProtocol
     {
-        void register_event(OnReceiveData receiveData);
+        void register_receive_data_event(OnReceiveData receiveData);
         bool prepare();
-        void accept_msg(string data);
+        void write_data_to_serial_port(byte[] data);
     }
 }
